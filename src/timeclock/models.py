@@ -2,17 +2,11 @@ from datetime import timedelta, datetime, time
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-
 from django.utils import timezone
-
 
 
 ACTIVITY_TIME_DETLA = getattr(settings, "ACTIVITY_TIME_DETLA", timedelta(minutes=1)) 
 
-
-
-# https://docs.djangoproject.com/en/1.10/ref/exceptions/#django.core.exceptions.ValidationError
-# Django Models Unleashed on http://joincfe.com
 
 USER_ACTIVITY_CHOICES = (
         ('checkin', 'Check In'),
@@ -39,6 +33,7 @@ class UserActivityQuerySet(models.query.QuerySet):
         if user is None:
             return self
         return self.filter(user=user).order_by('-timestamp').first()
+
 
 class UserActivityManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
@@ -75,6 +70,7 @@ class UserActivityManager(models.Manager):
         obj.save()
         return obj
 
+
 class UserActivity(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     activity = models.CharField(max_length=120, default='checkin', choices=USER_ACTIVITY_CHOICES)
@@ -107,7 +103,6 @@ class UserActivity(models.Model):
         if self.activity == 'checkin':
             current = "Checked in"
         return current
-
 
     def clean(self, *args, **kwargs):
         if self.user:

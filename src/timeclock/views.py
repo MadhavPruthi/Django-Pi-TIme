@@ -16,6 +16,7 @@ User = get_user_model()
 
 
 class UsersActivityView(View):
+
     @method_decorator(staff_member_required)
     def dispatch(self, *args, **kwargs):
         return super(UsersActivityView, self).dispatch(*args, **kwargs)
